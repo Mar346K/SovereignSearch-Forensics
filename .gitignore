@@ -1,0 +1,40 @@
+# ==========================================
+# SovereignSearch-Forensics .gitignore
+# ==========================================
+
+# Environments & Secrets
+.env
+.venv
+env/
+venv/
+ENV/
+
+# IDEs & Editors
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Python Core
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+
+# Application State & Data (Privacy First)
+data_in/
+vector_db/
+output/
+
+# Application Logs
+*.log
+
+# OS Generated Files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db

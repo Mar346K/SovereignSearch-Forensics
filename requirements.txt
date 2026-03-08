@@ -1,0 +1,9 @@
+streamlit
+langchain
+langchain-community
+langchain-ollama
+langchain-chroma
+langchain-classic
+docx2txt
+pypdf
+reportlab

@@ -1,0 +1,46 @@
+========================================================================
+             SOVEREIGN SEARCH v2.5 - QUICKSTART GUIDE
+========================================================================
+Thank you for choosing the Vault. This system provides professional-grade,
+100% private AI intelligence using your local hardware.
+
+Follow these 3 steps to initialize your Intelligence Engine.
+
+1. INSTALL CORE DEPENDENCIES
+------------------------------------------------------------------------
+Before launching, ensure your computer is ready for AI acceleration:
+- Run 'Setup_Environment.bat'.
+  This will install the necessary Python libraries and download the
+  Nomic-Embed and Llama 3.1 models to your machine.
+
+2. HARDWARE OPTIMIZATION
+------------------------------------------------------------------------
+The Vault is designed to detect your GPU automatically.
+- NVIDIA USERS: Ensure you have the latest CUDA drivers (v12+).
+- AMD USERS: Ensure you have the latest Adrenalin/ROCm drivers.
+- INTEL USERS: The system is pre-optimized for Intel Arc A-Series GPUs.
+
+If your GPU is not detected, the system will fallback to CPU mode.
+(Note: CPU mode is significantly slower for 1GB+ archives).
+
+3. LOADING & SEARCHING
+------------------------------------------------------------------------
+- Place all files (.pdf, .docx) into the 'data_in' folder.
+- Run 'Start_Sovereign_Search.bat'.
+- Once the browser opens, click [⚡ Sync & Index New Files] in the sidebar.
+- Wait for the progress bar to complete. Your data is now "Vaulted."
+
+FORENSIC SYNTHESIS MODE
+------------------------------------------------------------------------
+Enable "Synthesis Mode" for complex inquiries. This forces the AI to
+find connections across different subject matters (e.g., linking
+Linguistics research with Sociology findings).
+
+SUPPORT & TROUBLESHOOTING
+------------------------------------------------------------------------
+- Site "Refused to Connect"? Give the engine 10 seconds to warm up the GPU.
+- Low GPU Usage? The initial file reading is a CPU task; the GPU will
+  spike during the "Embedding" phase.
+========================================================================
+                      SECURE. PRIVATE. SOVEREIGN.
+========================================================================
