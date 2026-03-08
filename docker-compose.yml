@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  vault-app:
+    build: .
+    container_name: sovereign-search-app
+    ports:
+      - "8501:8501"
+    volumes:
+      # Mount local directories so vectors and PDFs are not lost on restart
+      - ./data_in:/app/data_in
+      - ./vector_db:/app/vector_db
+    environment:
+      # Pass through hardware optimization flags
+      - ZES_ENABLE_SYSMAN=1
+      - OLLAMA_NUM_GPU=999
+      # Point LangChain inside the container to the host machine's Ollama instance
+      - OLLAMA_HOST=http://host.docker.internal:11434
+    extra_hosts:
+      # Allows the container to resolve 'host.docker.internal' to your Windows machine
+      - "host.docker.internal:host-gateway"

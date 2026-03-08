@@ -1,9 +1,12 @@
 streamlit
+streamlit-drawable-canvas
 langchain
 langchain-community
 langchain-ollama
 langchain-chroma
 langchain-classic
 docx2txt
-pypdf
+PyMuPDF
+pytesseract
+Pillow
 reportlab
