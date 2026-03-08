@@ -1,49 +1,65 @@
 # ⚖️ SovereignSearch-Forensics
 
-**A 100% Local, Air-Gapped Retrieval-Augmented Generation (RAG) Engine for Legal and Forensic Document Analysis.**
-
-![Python](https://img.shields.io/badge/Python-3.13-blue.svg)
-![Streamlit](https://img.shields.io/badge/Streamlit-Framework-FF4B4B.svg)
-![LangChain](https://img.shields.io/badge/LangChain-RAG-green.svg)
+![Python](https://img.shields.io/badge/Python-3.11-blue.svg)
+![Docker](https://img.shields.io/badge/Docker-Enabled-2496ED.svg)
+![LangChain](https://img.shields.io/badge/LangChain-Integration-green.svg)
 ![Ollama](https://img.shields.io/badge/Ollama-Local_LLM-black.svg)
-![ChromaDB](https://img.shields.io/badge/Chroma-Vector_DB-orange.svg)
 
-## 📌 Executive Summary
-**SovereignSearch-Forensics** is a flagship AI systems engineering project demonstrating how to build a highly capable, completely offline RAG architecture. Designed for sensitive data environments (legal discovery, forensic audits, proprietary research), it guarantees zero data exfiltration by running all embedding and generation processes on local hardware. 
+**SovereignSearch-Forensics** is a privacy-first, local AI Retrieval-Augmented Generation (RAG) engine designed for offline document intelligence and forensic assembly. It ensures zero telemetry and absolute data sovereignty by running large language models entirely on local hardware.
 
-The system has been meticulously engineered for concurrency, modularity, and smooth user experience during heavy local compute workloads.
+---
 
-## ✨ Core Architecture & Features
+## 🚀 Key Features
 
-* **Asynchronous, Non-Blocking Ingestion:** Utilizes a custom Python generator pattern paired with Streamlit `@st.fragment` decorators. This allows massive PDF/DOCX libraries to be embedded in the background without freezing the primary UI thread.
-* **Thread-Safe Concurrency:** Migrated from flat JSON files to a robust SQLite database implementing Write-Ahead Logging (`PRAGMA journal_mode=WAL;`). This ensures zero database locking or race conditions during simultaneous read/write operations (e.g., querying the index while a background sync logs to the audit trail).
-* **Decoupled, Modular Backend:** The application cleanly separates the Streamlit presentation layer from the LangChain/ChromaDB RAG engine and the OS-level file management, adhering to enterprise design patterns.
-* **Human-in-the-Loop OCR Fallback:** Features a "Forensic Assembly" module using `streamlit-drawable-canvas` and Tesseract OCR, allowing users to manually bound, extract, and verify text from corrupted or scanned-image PDFs that standard loaders fail to parse.
+* **100% Air-Gapped Intelligence:** No API keys, no cloud data leaks. Built on top of local `Ollama` models (`llama3.1`, `nomic-embed-text`).
+* **Hardware Empathy & Optimization:** Pre-configured for high-capacity system memory and 16GB VRAM accelerators (e.g., Intel Arc A770) leveraging OpenVINO/SYSMAN telemetry.
+* **Asynchronous Ingestion Pipeline:** Non-blocking document chunking and embedding, allowing the UI to remain responsive during massive file imports.
+* **Forensic Assembly Mode:** Built-in OCR pipeline (Tesseract) for manual bounding-box extraction and correction of corrupted or scanned PDF evidence.
+* **Immutable Audit Trail:** SQLite-backed logging with Write-Ahead Logging (WAL) enabled to track every document modification and AI interaction.
 
-## 🛠️ Technology Stack
+## 🧠 System Architecture
 
-* **Frontend/UI:** Streamlit
-* **Orchestration:** LangChain
-* **Vector Store:** ChromaDB
-* **Local LLM Provider:** Ollama (Llama 3.1 8B for generation, Nomic-Embed-Text for embeddings)
-* **Database (State & Auditing):** SQLite3 (WAL Mode)
-* **Document Parsers:** PyMuPDF (fitz), Docx2txt, PyTesseract
 
-## 💻 Target Hardware Profile
-The engine is hardware-accelerated and designed to take advantage of high-VRAM local setups. The primary development and optimization environment features:
-* **GPU:** Intel Arc A770 (16GB VRAM) - Configured with `ZES_ENABLE_SYSMAN=1`
-* **RAM:** 128 GB 
-* **CPU:** Intel Core i7 (9th Gen)
-* *Note: Fallback CPU mode is supported but significantly impacts embedding speeds.*
+The application adheres to a strict Separation of Concerns:
+1. **Frontend (`frontend/`):** Streamlit-powered UI utilizing cached resource states to prevent VRAM reloading.
+2. **Core AI Engine (`core/`):** LangChain orchestration, ChromaDB vector storage, and optimized text-splitting pipelines.
+3. **Utilities (`utils/`):** Hashing, OCR sanitization, and asynchronous file queues.
+4. **Configuration (`config/`):** Pydantic-validated, centralized environment and hardware settings.
 
-## 🚀 Quickstart & Installation
+---
 
-**1. Prerequisites**
-* [Python 3.10+](https://www.python.org/downloads/)
-* [Ollama](https://ollama.com/)
-* [Tesseract OCR](https://github.com/UB-Mannheim/tesseract/wiki) (Add to System PATH for Forensic Assembly mode)
+## ⚙️ Quickstart (Docker Recommended)
 
-**2. Setup Environment**
-Run the initialization script to create the isolated virtual environment, install dependencies, and pull the required AI models to your local machine.
-```cmd
-scripts\Setup_Environment.bat
+The easiest way to run the Vault without managing local Python environments or Tesseract binaries is via Docker. Ensure Docker Desktop and [Ollama](https://ollama.com) are installed on your host machine.
+
+1. **Pull Required Local Models (Host Machine):**
+   ```bash
+   ollama pull llama3.1
+   ollama pull nomic-embed-text
+    ```
+
+2. **Boot the Container::**
+    ```bash
+    docker-compose up --build -d
+    ```
+
+3. **Access the Hub:**
+    Open your browser and navigate to "http://localhost:8501"
+    Note: Your data_in/ and vector_db/ folders are volume-mounted. All ingested documents and vector embeddings will persist on your host machine across container restarts.
+
+🛠️ Bare Metal Setup (Windows)
+If you prefer to run the engine directly on your hardware:
+
+1. **Install Python 3.11+ and Tesseract OCR for Windows. Add Tesseract to your System PATH.**
+
+2. **Clone the repository and run the setup script:**
+
+    ```bash
+    scripts\Setup_Environment.bat
+    ```
+
+3. **Launch the engine:**
+    ```bash
+    scripts\01_START_VAULT.bat
+    ```
+
