@@ -1,5 +1,6 @@
 import os
 import hashlib
+from pathlib import Path
 from typing import List, Dict, Any, Generator, Tuple, Optional
 from langchain_community.document_loaders import PyMuPDFLoader, Docx2txtLoader
 from langchain_chroma import Chroma
@@ -9,10 +10,11 @@ from core.database import load_registry, register_file, log_audit
 from core.ingestion import chunk_and_embed
 
 def get_file_hash(filepath: str) -> str:
-    """Generates an MD5 hash for a file to track indexing status and prevent duplicates."""
-    hasher = hashlib.md5()
+    """Generates a SHA-256 hash for a file to track indexing status and ensure forensic integrity."""
+    hasher = hashlib.sha256()
     with open(filepath, 'rb') as f:
-        while chunk := f.read(8192): 
+        # 64KB chunks for memory-efficient streaming
+        for chunk in iter(lambda: f.read(65536), b""): 
             hasher.update(chunk)
     return hasher.hexdigest()
 
@@ -79,3 +81,19 @@ def process_files_generator(
             yield True, item['name'], None
         except Exception as e:
             yield False, item['name'], str(e)
+
+def get_safe_matter_path(base_dir: Path | str, user_input: str) -> Path:
+    """
+    Resolves and jails user-provided matter paths to prevent directory traversal.
+    """
+    base_path = Path(base_dir).resolve()
+    sanitized_input = user_input.replace(" / ", "/")
+    
+    # .resolve() evaluates symlinks and '..' components to their absolute real path
+    target_path = (base_path / sanitized_input).resolve()
+    
+    # Strict boundary check: If the target isn't inside the base_dir, it's an attack.
+    if not target_path.is_relative_to(base_path):
+        raise ValueError(f"SECURITY ALERT: Path Traversal Attempt Detected. Target: {target_path}")
+    
+    return target_path
