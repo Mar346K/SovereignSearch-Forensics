@@ -69,10 +69,12 @@ def process_files_generator(
     for item in sync_queue:
         try:
             loader = PyMuPDFLoader(item['path']) if item['path'].endswith(".pdf") else Docx2txtLoader(item['path'])
-            docs = loader.load()
             
-            if docs:
-                chunk_and_embed(db, docs, selected_matter)
+            # UPGRADE: Lazy load the document to prevent RAM spikes on massive PDFs
+            doc_iterator = loader.lazy_load()
+            
+            if doc_iterator:
+                chunk_and_embed(db, doc_iterator, selected_matter)
                 
             file_hash = get_file_hash(item['path'])
             register_file(file_hash, item['name'], selected_matter)
