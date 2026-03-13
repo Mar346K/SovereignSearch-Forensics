@@ -1,5 +1,6 @@
 import streamlit as st
 import os
+from pathlib import Path
 
 # 1. Initialize environment and configs before importing heavy AI modules
 from config.settings import settings
@@ -7,7 +8,7 @@ settings.initialize_environment()
 
 from core.database import init_db
 from core.rag_engine import init_system
-from utils.file_manager import get_matters
+from utils.file_manager import get_matters, get_safe_matter_path
 from frontend.views import render_discovery_hub, render_forensic_assembly
 
 # 2. PAGE CONFIGURATION
@@ -20,10 +21,6 @@ st.set_page_config(
 # 3. CACHED SYSTEM STARTUP
 @st.cache_resource
 def startup_system():
-    """
-    Caches the database and model initialization. 
-    Prevents the LLM and Embedding models from reloading into GPU VRAM on every UI interaction.
-    """
     init_db()
     db, llm = init_system()
     return db, llm
@@ -37,7 +34,12 @@ with st.sidebar:
     matters = get_matters()
     selected_matter = st.selectbox("Current Matter:", matters)
 
-    m_path = os.path.join(settings.data_dir, selected_matter.replace(" / ", "/"))
+    # UPGRADE: Secure path resolution wired into the UI
+    if "Unassigned" in selected_matter:
+        m_path = str(settings.data_dir)
+    else:
+        m_path = str(get_safe_matter_path(settings.data_dir, selected_matter))
+
     all_pdfs = [f for f in os.listdir(m_path) if f.lower().endswith('.pdf')] if os.path.exists(m_path) else []
     
     focus_file = st.selectbox("🎯 Focus Scan:", ["None"] + all_pdfs)

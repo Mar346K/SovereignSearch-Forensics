@@ -1,5 +1,6 @@
 import streamlit as st
 import os
+from pathlib import Path
 from PIL import Image
 import fitz  # PyMuPDF
 import pytesseract
@@ -11,7 +12,6 @@ from utils.file_manager import build_sync_queue
 from core.database import log_audit
 
 def render_discovery_hub(db: Chroma, selected_matter: str, focus_file: str) -> None:
-    """Renders the primary document discovery and ingestion interface."""
     st.title("📂 Sovereign Discovery Hub")
 
     with st.expander("🔄 Vault Synchronization", expanded=True):
@@ -23,7 +23,6 @@ def render_discovery_hub(db: Chroma, selected_matter: str, focus_file: str) -> N
     live_query_window(db)
 
 def render_forensic_assembly(selected_matter: str, all_pdfs: list[str], m_path: str) -> None:
-    """Renders the manual OCR and data extraction correction tool."""
     st.title("🧩 Forensic Assembly & Audit")
     
     if "Unassigned" in selected_matter:
@@ -35,7 +34,9 @@ def render_forensic_assembly(selected_matter: str, all_pdfs: list[str], m_path: 
         return
 
     doc_name = st.selectbox("Select Evidence:", all_pdfs)
-    doc_path = os.path.join(m_path, doc_name)
+    
+    # UPGRADE: Secure path resolution wired into forensic assembly
+    doc_path = str((Path(m_path) / doc_name).resolve())
     
     try:
         pdf = fitz.open(doc_path)
