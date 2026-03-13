@@ -1,5 +1,5 @@
 # SovereignSearch-Forensics ⚖️
-[![Vault Security & Integrity Pipeline](https://github.com/YOUR_GITHUB_USERNAME/SovereignSearch-Forensics/actions/workflows/ci.yml/badge.svg)](https://github.com/YOUR_GITHUB_USERNAME/SovereignSearch-Forensics/actions/workflows/ci.yml)
+[![Vault Security & Integrity Pipeline](https://github.com/Mar346K/SovereignSearch-Forensics/actions/workflows/ci.yml/badge.svg)](https://github.com/YOUR_GITHUB_USERNAME/SovereignSearch-Forensics/actions/workflows/ci.yml)
 
 **A 100% Offline, Tamper-Evident RAG Intelligence Engine for Legal & Forensic Discovery.**
 
